@@ -10,6 +10,8 @@ import internetarchive
 from internetarchive.config import parse_config_file
 from datetime import datetime
 from yt_dlp import YoutubeDL
+
+from tubeup.Helper.DirPath import DirPath
 from .utils import (get_itemname, check_is_file_empty,
                     EMPTY_ANNOTATION_FILE)
 from logging import getLogger
@@ -42,7 +44,7 @@ class TubeUp(object):
         :param output_template: A template string that will be used to
                                 generate the output filenames.
         """
-        self.dir_path = dir_path
+        self.dir_path :DirPath = DirPath(dir_path)
         self.verbose = verbose
         self.ia_config_path = ia_config_path
         self.logger = getLogger(__name__)
@@ -55,32 +57,8 @@ class TubeUp(object):
         if not self.verbose:
             self.logger.setLevel(logging.ERROR)
 
-    @property
-    def dir_path(self):
-        return self._dir_path
 
-    @dir_path.setter
-    def dir_path(self, dir_path):
-        """
-        Set a directory to be the saving directory for resources that have
-        been downloaded.
 
-        :param dir_path:  Path to a directory that will be used to save the
-                          videos, if it not created yet, the directory
-                          will be created.
-        """
-        extended_usr_dir_path = os.path.expanduser(dir_path)
-
-        # Create the directories.
-        os.makedirs(
-            os.path.join(extended_usr_dir_path, DOWNLOAD_DIR_NAME),
-            exist_ok=True)
-
-        self._dir_path = {
-            'root': extended_usr_dir_path,
-            'downloads': os.path.join(extended_usr_dir_path,
-                                      DOWNLOAD_DIR_NAME)
-        }
 
     def get_resource_basenames(self, urls,
                                cookie_file=None, proxy_url=None,
@@ -255,7 +233,7 @@ class TubeUp(object):
                                       be used by youtube_dl.
         """
         ydl_opts = {
-            'outtmpl': os.path.join(self.dir_path['downloads'],
+            'outtmpl': os.path.join(self.dir_path.downloads,
                                     self.output_template),
             'restrictfilenames': True,
             'quiet': not self.verbose,
@@ -304,7 +282,7 @@ class TubeUp(object):
             ydl_opts['password'] = ydl_password
 
         if use_download_archive:
-            ydl_opts['download_archive'] = os.path.join(self.dir_path['root'],
+            ydl_opts['download_archive'] = os.path.join(self.dir_path.root,
                                                         '.ytdlarchive')
 
         return ydl_opts
