@@ -10,13 +10,18 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = {file = "LICENSE"}
 dependencies = [
-    "internetarchive>=5.0.3",
+    "internetarchive==4.1.0",
     "docopt==0.6.2",
     "yt-dlp",
+    # test dependencies
+    "pytest==7.4.4",
+    "pytest-cov==4.1.0",
+    "requests-mock==1.11.0",
+    "flake8==7.0.0",
 ]
 
 [project.scripts]
-tubeup = "tubeup.__main__:main"
+tubeup = "tubeup:__main__"
 
 [tool.setuptools.dynamic]
 version = {attr = "tubeup.__version__"}
