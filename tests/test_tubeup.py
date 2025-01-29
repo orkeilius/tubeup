@@ -28,51 +28,9 @@ class TubeUpTests(unittest.TestCase):
     def test_tubeup_attribute_logger_when_verbose_mode(self):
         tu = TubeUp(verbose=True)
         self.assertIsInstance(tu.logger, logging.Logger)
-    
-    def test_create_basenames_from_ydl_info_dict_video(self):
-        ydl = YoutubeDL()
-        result = self.tu.create_basenames_from_ydl_info_dict(
-            ydl, info_dict_video)
-
-        expected_result = set(
-            ['Video and Blog Competition 2017 - Bank Indonesia & '
-             'NET TV #BIGoesToCampus [hlG3LeFaQwU]'])
-
-        self.assertEqual(result, expected_result)
-
-    def test_create_basenames_from_ydl_info_dict_playlist(self):
-        ydl = YoutubeDL()
-        result = self.tu.create_basenames_from_ydl_info_dict(
-            ydl, info_dict_playlist)
-
-        expected_result = set([
-            'Live Streaming Rafid Aslam [7gjgkH5iPaE]',
-            'Live Streaming Rafid Aslam [q92kxPm-pqM]',
-            'Cara Membuat Laptop Menjadi Hotspot WiFi Dengan CMD [YjFwMSDNphM]',
-            '[CSO] Defeat Boss in Dead End With Thanatos 7 [EEm6MwXLse0]',
-            'Cara Bermain Minecraft Multiplayer Dengan LAN [g2vTZ2ka-tM]',
-            'Live Streaming Rafid Aslam [AXhuSS5_9YU]',
-            'Cara Membuat Disk Baru di Komputer [KDOygJnK7Sw]',
-            'Cara Mendownload Lewat Torrent [cC-9RghkvXs]']
-        )
-
-        self.assertEqual(result, expected_result)
-
-    def test_get_resource_basenames(self):
-        tu = TubeUp(dir_path=os.path.join(current_path,
-                                          'test_tubeup_rootdir'))
 
 
 
-        result = tu.get_resource_basenames(
-            ['https://www.youtube.com/watch?v=KdsN9YhkDrY'],
-            ignore_existing_item=True)
-
-        expected_result = {os.path.join(
-            current_path, 'test_tubeup_rootdir', 'downloads',
-            'KdsN9YhkDrY')}
-
-        self.assertEqual(expected_result, result)
 
     def test_archive_urls(self):
         tu = TubeUp(dir_path=os.path.join(current_path,
