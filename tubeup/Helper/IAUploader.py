@@ -6,13 +6,13 @@ from logging import Logger, getLogger
 import internetarchive
 from internetarchive.config import parse_config_file
 
-from tubeup.Helper.MetadataConverter import *
+from tubeup.Helper.MetadataConverter import MetadataConverter
 from tubeup.utils import EMPTY_ANNOTATION_FILE, check_is_file_empty, get_itemname
 
 
 class IAUploader :
 
-    def __init__(self,ia_config_path:str,verbose:bool=False):
+    def __init__(self,ia_config_path:str,verbose:bool=False) -> None:
         self.logger: Logger = getLogger(__name__)
         self.verbose: bool = verbose
         self.ia_config_path :str = ia_config_path
@@ -80,7 +80,7 @@ class IAUploader :
             self.logger.error(msg)
             if self.verbose:
                 print(msg)
-            raise Exception(msg)
+            raise  Exception(msg)
 
         item.upload(files_to_upload, metadata=metadata, retries=9000,
                     request_kwargs=dict(timeout=9000), delete=True,

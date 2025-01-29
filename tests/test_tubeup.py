@@ -1,53 +1,14 @@
 import unittest
 import os
-import shutil
-import json
-import time
 import requests_mock
-import glob
 import logging
 
 from tubeup.TubeUp import TubeUp
 from tubeup import __version__
 from yt_dlp import YoutubeDL
-from .constants import info_dict_playlist, info_dict_video
 
-
-current_path = os.path.dirname(os.path.realpath(__file__))
-
-SCANNER = 'TubeUp Video Stream Mirroring Application {}'.format(__version__)
-
-
-def get_testfile_path(name):
-    return os.path.join(current_path, 'test_tubeup_files', name)
-
-
-def mocked_ydl_progress_hook(d):
-    pass
-
-
-def mock_upload_response_by_videobasename(m, ia_id, videobasename):
-    files_to_upload = glob.glob(videobasename + '*')
-
-    for file_path in files_to_upload:
-        filename = os.path.basename(file_path)
-        m.put('https://s3.us.archive.org/%s/%s' % (ia_id, filename),
-              content=b'',
-              headers={'content-type': 'text/plain'})
-
-
-def copy_testfiles_to_tubeup_rootdir_test():
-    # Copy testfiles to rootdir path of TubeUp.
-    # This method was created because after the uploading done by
-    # internetarchive library, it deletes the files that has been uploaded.
-    testfiles_dir = os.path.join(current_path, 'test_tubeup_files',
-                                 'files_for_upload_and_download_tests')
-
-    for filepath in os.listdir(testfiles_dir):
-        shutil.copy(
-            os.path.join(testfiles_dir, filepath),
-            os.path.join(current_path, 'test_tubeup_rootdir', 'downloads',
-                         filepath))
+from tests._testUtils import *
+from tests.constants import info_dict_playlist, info_dict_video
 
 
 class TubeUpTests(unittest.TestCase):
@@ -55,6 +16,7 @@ class TubeUpTests(unittest.TestCase):
     def setUp(self):
         self.tu = TubeUp()
         self.maxDiff = 999999999
+        copy_testfiles_to_tubeup_rootdir()
 
 
     def test_tubeup_attribute_logger_when_quiet_mode(self):
@@ -100,7 +62,7 @@ class TubeUpTests(unittest.TestCase):
         tu = TubeUp(dir_path=os.path.join(current_path,
                                           'test_tubeup_rootdir'))
 
-        copy_testfiles_to_tubeup_rootdir_test()
+
 
         result = tu.get_resource_basenames(
             ['https://www.youtube.com/watch?v=KdsN9YhkDrY'],
@@ -121,7 +83,7 @@ class TubeUpTests(unittest.TestCase):
             current_path, 'test_tubeup_rootdir', 'downloads',
             'KdsN9YhkDrY')
 
-        copy_testfiles_to_tubeup_rootdir_test()
+        copy_testfiles_to_tubeup_rootdir()
 
         with requests_mock.Mocker() as m:
             # Mock the request to s3.us.archive.org, so it will responds
