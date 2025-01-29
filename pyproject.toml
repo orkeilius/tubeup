@@ -7,16 +7,21 @@ name = "tubeup"
 dynamic = ["version"]
 description = "VOD service to Archive.org uploader"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = {file = "LICENSE"}
 dependencies = [
-    "internetarchive",
+    "internetarchive==4.1.0",
     "docopt==0.6.2",
     "yt-dlp",
+    # test dependencies
+    "pytest==7.4.4",
+    "pytest-cov==4.1.0",
+    "requests-mock==1.11.0",
+    "flake8==7.0.0",
 ]
 
 [project.scripts]
-tubeup = "tubeup:__main__"
+tubeup = "tubeup.__main__:main"
 
 [tool.setuptools.dynamic]
 version = {attr = "tubeup.__version__"}
