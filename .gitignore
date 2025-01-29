@@ -6,3 +6,4 @@ downloads/
 *.egg-info
 .cache/
 build/
+.idea/
