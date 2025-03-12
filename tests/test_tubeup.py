@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import patch
 
@@ -5,9 +6,11 @@ import requests_mock
 import logging
 
 from tests.FakeDlp.FakeYDL import FakeYDL
-from tests._testUtils import *
+from tests._testUtils import copy_testfiles_to_tubeup_rootdir, current_path, get_testfile_path, \
+    mock_upload_response_by_videobasename, SCANNER
 
 from tubeup.TubeUp import TubeUp
+
 
 @patch("tubeup.Component.YtdlpWrapper.YoutubeDL", FakeYDL)
 class TubeUpTests(unittest.TestCase):
@@ -17,7 +20,6 @@ class TubeUpTests(unittest.TestCase):
         self.tu = TubeUp()
         self.maxDiff = 999999999
         copy_testfiles_to_tubeup_rootdir()
-
 
     def test_tubeup_attribute_logger_when_quiet_mode(self):
         # self.tu is already `TubeUp` instance with quiet mode, so we don't
@@ -51,8 +53,6 @@ class TubeUpTests(unittest.TestCase):
             m.get('https://archive.org/metadata/youtube-KdsN9YhkDrY',
                   content=b'{}',
                   headers={'content-type': 'application/json'})
-
-
 
             # Mock the PUT requests for internetarchive urls that defined
             # in mock_upload_response_by_videobasename(), so this test
