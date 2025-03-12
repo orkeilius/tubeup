@@ -5,9 +5,9 @@ from unittest.mock import patch
 from yt_dlp import YoutubeDL
 
 from build.lib.tubeup.Helper.DirPath import DirPath
-from tests.FakeDlp.FakeYDL import FakeYDL
-from tests._testUtils import copy_testfiles_to_tubeup_rootdir, current_path
-from tests.constants import info_dict_playlist, info_dict_video
+from tests._test.FakeYDL import FakeYDL
+from tests._test.testUtils import copy_testfiles_to_tubeup_rootdir, current_path
+from tests._test.constants import info_dict_playlist, info_dict_video
 from tubeup.Component.YtdlpWrapper import YtdlpWrapper
 
 

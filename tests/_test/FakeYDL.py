@@ -2,7 +2,7 @@ import json
 
 from yt_dlp import YoutubeDL
 
-from tests.helper.test_MetadataConverter import get_testfile_path
+from tests._test.testUtils import get_testfile_path
 
 
 # helper from yt_dlp

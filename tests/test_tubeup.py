@@ -5,8 +5,8 @@ from unittest.mock import patch
 import requests_mock
 import logging
 
-from tests.FakeDlp.FakeYDL import FakeYDL
-from tests._testUtils import copy_testfiles_to_tubeup_rootdir, current_path, get_testfile_path, \
+from tests._test.FakeYDL import FakeYDL
+from tests._test.testUtils import copy_testfiles_to_tubeup_rootdir, current_path, get_testfile_path, \
     mock_upload_response_by_videobasename, SCANNER
 
 from tubeup.TubeUp import TubeUp
@@ -33,11 +33,11 @@ class TubeUpTests(unittest.TestCase):
 
     def test_archive_urls(self):
         tu = TubeUp(dir_path=os.path.join(current_path,
-                                          'test_tubeup_rootdir'),
+                                          'test_rootdir'),
                     ia_config_path=get_testfile_path('ia_config_for_test.ini'))
 
         videobasename = os.path.join(
-            current_path, 'test_tubeup_rootdir', 'downloads',
+            current_path, 'test_rootdir', 'downloads',
             'KdsN9YhkDrY')
 
         copy_testfiles_to_tubeup_rootdir()

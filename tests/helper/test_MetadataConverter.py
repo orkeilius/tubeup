@@ -4,16 +4,11 @@ import os
 import unittest
 from typing import LiteralString, Union
 
+from tests._test.testUtils import get_testfile_path
 from tubeup import __version__
 from tubeup.Helper.MetadataConverter import MetadataConverter
 
 SCANNER = 'TubeUp Video Stream Mirroring Application {}'.format(__version__)
-
-
-def get_testfile_path(name) -> Union[LiteralString, str, bytes]:
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    return os.path.join(current_path, '../test_tubeup_files', name)
-
 
 class MetadataConverterTest(unittest.TestCase):
 

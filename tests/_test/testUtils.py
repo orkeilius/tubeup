@@ -1,6 +1,8 @@
 import glob
 import os
 import shutil
+from typing import Union, LiteralString
+
 from tubeup import __version__
 
 current_path = os.path.dirname(os.path.realpath(__file__))
@@ -8,8 +10,8 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 SCANNER = 'TubeUp Video Stream Mirroring Application {}'.format(__version__)
 
 
-def get_testfile_path(name) -> str:
-    return os.path.join(current_path, 'test_tubeup_files', name)
+def get_testfile_path(name) -> Union[LiteralString, str, bytes]:
+    return os.path.join(current_path, 'test_files', name)
 
 
 def mocked_ydl_progress_hook(d) -> None:
@@ -30,9 +32,9 @@ def copy_testfiles_to_tubeup_rootdir() -> None:
     # Copy testfiles to rootdir path of TubeUp.
     # This method was created because after the uploading done by
     # internetarchive library, it deletes the files that has been uploaded.
-    testfiles_dir = os.path.join(current_path, 'test_tubeup_files',
+    testfiles_dir = os.path.join(current_path, 'test_files',
                                  'files_for_upload_and_download_tests')
-    temp_dir = os.path.join(current_path, 'test_tubeup_rootdir', 'downloads')
+    temp_dir = os.path.join(current_path, 'test_rootdir', 'downloads')
 
     os.makedirs(temp_dir, exist_ok=True)
     for filepath in os.listdir(testfiles_dir):
@@ -40,3 +42,8 @@ def copy_testfiles_to_tubeup_rootdir() -> None:
             os.path.join(testfiles_dir, filepath),
             os.path.join(temp_dir,
                          filepath))
+
+def get_testfile_path(name) -> Union[LiteralString, str, bytes]:
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(current_path, 'test_files', name)
+
