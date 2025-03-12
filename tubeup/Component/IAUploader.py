@@ -10,13 +10,12 @@ from tubeup.Helper.MetadataConverter import MetadataConverter
 from tubeup.utils import EMPTY_ANNOTATION_FILE, check_is_file_empty, get_itemname
 
 
-class IAUploader :
+class IAUploader:
 
-    def __init__(self,ia_config_path:str,verbose:bool=False) -> None:
+    def __init__(self, ia_config_path: str, verbose: bool = False) -> None:
         self.logger: Logger = getLogger(__name__)
         self.verbose: bool = verbose
-        self.ia_config_path :str = ia_config_path
-
+        self.ia_config_path: str = ia_config_path
 
     def upload_ia(self, videobasename, custom_meta=None, parsed_ia_s3_config=None):
         """
@@ -29,7 +28,7 @@ class IAUploader :
                                when uploading to archive.org and whether the item
                                already exists.
         """
-        json_metadata_filepath : str = videobasename + '.info.json'
+        json_metadata_filepath: str = videobasename + '.info.json'
         with open(json_metadata_filepath, 'r', encoding='utf-8') as f:
             vid_meta = json.load(f)
 
@@ -45,17 +44,17 @@ class IAUploader :
         # Delete empty description file
         description_file_path = videobasename + '.description'
         if (os.path.exists(description_file_path) and
-            (('description' in vid_meta and
-             vid_meta['description'] == '') or
-                check_is_file_empty(description_file_path))):
+                (('description' in vid_meta and
+                  vid_meta['description'] == '') or
+                 check_is_file_empty(description_file_path))):
             os.remove(description_file_path)
 
         # Delete empty annotations.xml file so it isn't uploaded
         annotations_file_path = videobasename + '.annotations.xml'
         if (os.path.exists(annotations_file_path) and
-            (('annotations' in vid_meta and
-             vid_meta['annotations'] in {'', EMPTY_ANNOTATION_FILE}) or
-                check_is_file_empty(annotations_file_path))):
+                (('annotations' in vid_meta and
+                  vid_meta['annotations'] in {'', EMPTY_ANNOTATION_FILE}) or
+                 check_is_file_empty(annotations_file_path))):
             os.remove(annotations_file_path)
 
         # Upload all files with videobase name: e.g. video.mp3,
@@ -80,7 +79,7 @@ class IAUploader :
             self.logger.error(msg)
             if self.verbose:
                 print(msg)
-            raise  Exception(msg)
+            raise Exception(msg)
 
         item.upload(files_to_upload, metadata=metadata, retries=9000,
                     request_kwargs=dict(timeout=9000), delete=True,

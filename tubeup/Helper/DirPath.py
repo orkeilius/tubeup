@@ -2,9 +2,10 @@ import os
 
 DOWNLOAD_DIR_NAME = 'downloads'
 
+
 class DirPath:
 
-    def __init__(self,dir_path: str) -> None:
+    def __init__(self, dir_path: str) -> None:
         """
         Set a directory to be the saving directory for resources that have
         been downloaded.
@@ -22,13 +23,11 @@ class DirPath:
 
         self._root = extended_usr_dir_path
         self._downloads = os.path.join(extended_usr_dir_path, DOWNLOAD_DIR_NAME)
-    
+
     @property
     def root(self):
         return self._root
-    
+
     @property
     def downloads(self):
         return self._downloads
-    
-    

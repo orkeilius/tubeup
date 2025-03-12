@@ -2,9 +2,10 @@ import os
 import shutil
 import unittest
 
-from tubeup.Helper.DirPath import *
+from tubeup.Helper.DirPath import DirPath, DOWNLOAD_DIR_NAME
 
 current_path = os.path.dirname(os.path.realpath(__file__))
+
 
 class DirPathTest(unittest.TestCase):
 
@@ -15,7 +16,7 @@ class DirPathTest(unittest.TestCase):
                               downloads=os.path.join(root_path,
                                                      DOWNLOAD_DIR_NAME))
 
-        dir_path= DirPath(root_path)
+        dir_path = DirPath(root_path)
         self.assertEqual(dir_path.downloads, dir_paths_dict["downloads"])
         self.assertEqual(dir_path.root, dir_paths_dict["root"])
 
