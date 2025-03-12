@@ -1,10 +1,12 @@
 import logging
 
+from tubeup.Helper.DirPath import DirPath
+
 from tubeup.Component.IAUploader import IAUploader
 from logging import getLogger
 
 from tubeup.Component.YtdlpWrapper import YtdlpWrapper
-from tubeup.config.Ydl_options_factory import *
+
 
 class TubeUp(object):
 
@@ -30,7 +32,7 @@ class TubeUp(object):
         self.dir_path: DirPath = DirPath(dir_path)
         self.verbose = verbose
         self.ia_config_path = ia_config_path
-        self.logger: Logger = getLogger(__name__)
+        self.logger: logging.Logger = getLogger(__name__)
         self.output_template = output_template
 
         # Just print errors in quiet mode

@@ -2,9 +2,9 @@ import os
 import re
 from collections import defaultdict
 
-
 EMPTY_ANNOTATION_FILE = ('<?xml version="1.0" encoding="UTF-8" ?>'
                          '<document><annotations></annotations></document>')
+
 
 def key_value_to_dict(lst):
     """
@@ -24,6 +24,7 @@ def key_value_to_dict(lst):
 
     # Convert single-item lists back to strings for non-list values
     return {k: v if len(v) > 1 else v[0] for k, v in result.items()}
+
 
 def sanitize_identifier(identifier, replacement='-'):
     return re.sub(r'[^\w-]', replacement, identifier)
