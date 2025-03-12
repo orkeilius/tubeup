@@ -1,15 +1,16 @@
 import os
 import unittest
+from unittest.mock import patch
 
 from yt_dlp import YoutubeDL
 
 from build.lib.tubeup.Helper.DirPath import DirPath
+from tests.FakeDlp.FakeYDL import FakeYDL
 from tests._testUtils import copy_testfiles_to_tubeup_rootdir, current_path
-from tests.config.test_Ydl_options_factory import dir_path
 from tests.constants import info_dict_playlist, info_dict_video
 from tubeup.Component.YtdlpWrapper import YtdlpWrapper
 
-
+@patch("tubeup.Component.YtdlpWrapper.YoutubeDL", FakeYDL)
 class test_YtdlpWrapper(unittest.TestCase):
 
     @classmethod
@@ -17,13 +18,12 @@ class test_YtdlpWrapper(unittest.TestCase):
         copy_testfiles_to_tubeup_rootdir()
 
     @classmethod
+    @patch("tubeup.Component.YtdlpWrapper.YoutubeDL", FakeYDL)
     def setUp(self) -> None:
         dir_path = DirPath(os.path.join(current_path, 'test_tubeup_rootdir'))
         self.ydp: YtdlpWrapper = YtdlpWrapper(dir_path, ignore_existing_item=True)
 
-
     def test_get_resource_basenames(self) -> None:
-
         result = self.ydp.download(self.ydp.get_video_info(['https://www.youtube.com/watch?v=KdsN9YhkDrY'])
             )
 

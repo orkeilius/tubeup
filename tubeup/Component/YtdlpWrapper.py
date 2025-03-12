@@ -1,7 +1,7 @@
 import re
 import sys
 from logging import getLogger
-from typing import Optional
+from typing import Optional, Union
 
 import internetarchive
 from yt_dlp import YoutubeDL
@@ -105,7 +105,7 @@ class YtdlpWrapper:
         return False
 
 
-    def create_basename_from_ydl_video(self, info_dict) -> str | set[str]:
+    def create_basename_from_ydl_video(self, info_dict) -> Union[str, set[str]]:
         """
         Create basenames from YoutubeDL vidéo info_dict.
         :param info_dict:  A ydl info_dict that will be used to create

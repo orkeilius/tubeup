@@ -1,19 +1,19 @@
 import unittest
-import os
+from unittest.mock import patch
+
 import requests_mock
 import logging
 
-from tubeup.TubeUp import TubeUp
-from tubeup import __version__
-from yt_dlp import YoutubeDL
-
+from tests.FakeDlp.FakeYDL import FakeYDL
 from tests._testUtils import *
-from tests.constants import info_dict_playlist, info_dict_video
 
+from tubeup.TubeUp import TubeUp
 
+@patch("tubeup.Component.YtdlpWrapper.YoutubeDL", FakeYDL)
 class TubeUpTests(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         self.tu = TubeUp()
         self.maxDiff = 999999999
         copy_testfiles_to_tubeup_rootdir()
@@ -28,9 +28,6 @@ class TubeUpTests(unittest.TestCase):
     def test_tubeup_attribute_logger_when_verbose_mode(self):
         tu = TubeUp(verbose=True)
         self.assertIsInstance(tu.logger, logging.Logger)
-
-
-
 
     def test_archive_urls(self):
         tu = TubeUp(dir_path=os.path.join(current_path,
@@ -54,6 +51,8 @@ class TubeUpTests(unittest.TestCase):
             m.get('https://archive.org/metadata/youtube-KdsN9YhkDrY',
                   content=b'{}',
                   headers={'content-type': 'application/json'})
+
+
 
             # Mock the PUT requests for internetarchive urls that defined
             # in mock_upload_response_by_videobasename(), so this test
