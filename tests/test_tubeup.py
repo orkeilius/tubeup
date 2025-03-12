@@ -16,9 +16,9 @@ from tubeup.TubeUp import TubeUp
 class TubeUpTests(unittest.TestCase):
 
     @classmethod
-    def setUpClass(self):
-        self.tu = TubeUp()
-        self.maxDiff = 999999999
+    def setUpClass(cls):
+        cls.tu = TubeUp()
+        cls.maxDiff = 999999999
         copy_testfiles_to_tubeup_rootdir()
 
     def test_tubeup_attribute_logger_when_quiet_mode(self):

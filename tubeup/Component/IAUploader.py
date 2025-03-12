@@ -17,7 +17,7 @@ class IAUploader:
         self.verbose: bool = verbose
         self.ia_config_path: str = ia_config_path
 
-    def upload_ia(self, videobasename, custom_meta=None, parsed_ia_s3_config=None):
+    def upload_ia(self, videobasename, custom_meta=None):
         """
         Upload video to archive.org.
 
@@ -36,9 +36,9 @@ class IAUploader:
         for ext in ['*.part', '*.f302.*', '*.f302.*', '*.ytdl', '*.f251.*', '*.248.*', '*.f247.*', '*.temp']:
             if glob.glob(videobasename + ext):
                 msg = 'Video download incomplete, please re-run or delete video stubs in downloads folder, exiting...'
-                raise Exception(msg)
+                raise IOError(msg)
 
-        itemName = get_itemname(vid_meta)
+        item_name = get_itemname(vid_meta)
         metadata = MetadataConverter.create_archive_org_metadata_from_youtubedl_meta(vid_meta)
 
         # Delete empty description file
@@ -62,7 +62,7 @@ class IAUploader:
         files_to_upload = glob.glob(videobasename + '*')
 
         # Upload the item to the Internet Archive
-        item = internetarchive.get_item(itemName)
+        item = internetarchive.get_item(item_name)
 
         if custom_meta:
             metadata.update(custom_meta)
@@ -79,11 +79,11 @@ class IAUploader:
             self.logger.error(msg)
             if self.verbose:
                 print(msg)
-            raise Exception(msg)
+            raise ValueError(msg)
 
         item.upload(files_to_upload, metadata=metadata, retries=9000,
                     request_kwargs=dict(timeout=9000), delete=True,
                     verbose=self.verbose, access_key=s3_access_key,
                     secret_key=s3_secret_key)
 
-        return itemName, metadata
+        return item_name, metadata

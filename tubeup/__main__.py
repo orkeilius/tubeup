@@ -61,11 +61,11 @@ from tubeup.TubeUp import TubeUp
 from tubeup import __version__
 
 
-def main():
+def main() -> None  :
     # Parse arguments from file docstring
     args = docopt.docopt(__doc__, version=__version__)
 
-    URLs = args['<url>']
+    urls = args['<url>']
     cookie_file = args['--cookies']
     proxy_url = args['--proxy']
     username = args['--username']
@@ -94,7 +94,7 @@ def main():
                 output_template=args['--output'])
 
     try:
-        for identifier, meta in tu.archive_urls(URLs, metadata,
+        for identifier, meta in tu.archive_urls(urls, metadata,
                                                 cookie_file, proxy_url,
                                                 username, password,
                                                 use_download_archive,

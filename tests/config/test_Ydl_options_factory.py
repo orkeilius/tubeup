@@ -4,7 +4,7 @@ import unittest
 
 from tubeup.Helper.DirPath import DirPath
 
-from tubeup.config.Ydl_options_factory import Ydl_options_factory
+from tubeup.config.YdlOptionsFactory import YdlOptionsFactory
 
 dir_path = DirPath("~/.tubeup'")
 
@@ -17,9 +17,9 @@ class Ydl_options_factoryTest(unittest.TestCase):
     logger = logging.getLogger(__name__)
 
     def test_generate_ydl_options_with_download_archive(self):
-        result = Ydl_options_factory.generate_ydl_options(dir_path, self.logger,
-                                                          mocked_ydl_progress_hook,
-                                                          use_download_archive=True)
+        result = YdlOptionsFactory.generate_ydl_options(dir_path, self.logger,
+                                                        mocked_ydl_progress_hook,
+                                                        use_download_archive=True)
 
         expected_result = {
             'outtmpl': os.path.join(
@@ -53,7 +53,7 @@ class Ydl_options_factoryTest(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_generate_ydl_options(self):
-        result = Ydl_options_factory.generate_ydl_options(dir_path, self.logger, mocked_ydl_progress_hook)
+        result = YdlOptionsFactory.generate_ydl_options(dir_path, self.logger, mocked_ydl_progress_hook)
         expected_result = {
             'outtmpl': os.path.join(
                 dir_path.downloads, '%(id)s.%(ext)s'),
@@ -83,9 +83,9 @@ class Ydl_options_factoryTest(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_generate_ydl_options_with_proxy(self):
-        result = Ydl_options_factory.generate_ydl_options(dir_path, self.logger,
-                                                          mocked_ydl_progress_hook,
-                                                          proxy_url='http://proxytest.com:8080')
+        result = YdlOptionsFactory.generate_ydl_options(dir_path, self.logger,
+                                                        mocked_ydl_progress_hook,
+                                                        proxy_url='http://proxytest.com:8080')
         expected_result = {
             'outtmpl': os.path.join(
                 dir_path.downloads, '%(id)s.%(ext)s'),
@@ -116,9 +116,9 @@ class Ydl_options_factoryTest(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_generate_ydl_options_with_ydl_account(self):
-        result = Ydl_options_factory.generate_ydl_options(dir_path, self.logger,
-                                                          mocked_ydl_progress_hook, ydl_username='testUsername',
-                                                          ydl_password='testPassword')
+        result = YdlOptionsFactory.generate_ydl_options(dir_path, self.logger,
+                                                        mocked_ydl_progress_hook, ydl_username='testUsername',
+                                                        ydl_password='testPassword')
         expected_result = {
             'outtmpl': os.path.join(
                 dir_path.downloads, '%(id)s.%(ext)s'),
@@ -150,9 +150,9 @@ class Ydl_options_factoryTest(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_generate_ydl_options_with_verbose_mode(self):
-        result = Ydl_options_factory.generate_ydl_options(dir_path, self.logger,
-                                                          mocked_ydl_progress_hook, ydl_username='testUsername',
-                                                          ydl_password='testPassword', verbose=True)
+        result = YdlOptionsFactory.generate_ydl_options(dir_path, self.logger,
+                                                        mocked_ydl_progress_hook, ydl_username='testUsername',
+                                                        ydl_password='testPassword', verbose=True)
         expected_result = {
             'outtmpl': os.path.join(
                 dir_path.downloads, '%(id)s.%(ext)s'),

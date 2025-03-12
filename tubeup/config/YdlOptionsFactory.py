@@ -4,7 +4,7 @@ import os
 from tubeup.Helper.DirPath import DirPath
 
 
-class Ydl_options_factory:
+class YdlOptionsFactory:
 
     @staticmethod
     def generate_ydl_options(dir_path: DirPath,
@@ -16,7 +16,7 @@ class Ydl_options_factory:
                              ydl_password: str = None,
                              use_download_archive: bool = False,
                              ydl_output_template: str = '%(id)s.%(ext)s',
-                             verbose: bool = False):
+                             verbose: bool = False) -> dict :
         """
         Generate a dictionary that contains options that will be used
         by yt-dlp.

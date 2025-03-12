@@ -25,9 +25,9 @@ class DirPath:
         self._downloads = os.path.join(extended_usr_dir_path, DOWNLOAD_DIR_NAME)
 
     @property
-    def root(self):
+    def root(self) -> str:
         return self._root
 
     @property
-    def downloads(self):
+    def downloads(self) -> str:
         return self._downloads

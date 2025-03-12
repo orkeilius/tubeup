@@ -5,7 +5,7 @@ from tubeup.utils import sanitize_identifier, check_is_file_empty
 
 class UtilsTest(unittest.TestCase):
 
-    def test_preserve_valid_identifiers(self):
+    def test_preserve_valid_identifiers(self) -> None:
         valid = [
             'youtube--QBwhSklJks',
             'youtube-_--M04_mN-M',
@@ -14,7 +14,7 @@ class UtilsTest(unittest.TestCase):
         clean = [sanitize_identifier(x) for x in valid]
         self.assertListEqual(valid, clean)
 
-    def test_sanitize_bad_identifiers(self):
+    def test_sanitize_bad_identifiers(self) -> None:
         bad = [
             'twitch:vod-v181464551',
             'twitch:clips-1003820974',
@@ -28,7 +28,7 @@ class UtilsTest(unittest.TestCase):
         clean = [sanitize_identifier(x) for x in bad]
         self.assertListEqual(expect, clean)
 
-    def test_check_is_file_empty_when_file_is_empty(self):
+    def test_check_is_file_empty_when_file_is_empty(self) -> None:
         # Create a file for the test
         with open('testemptyfile.txt', 'w'):
             pass
@@ -36,14 +36,14 @@ class UtilsTest(unittest.TestCase):
         self.assertTrue(check_is_file_empty('testemptyfile.txt'))
         os.remove('testemptyfile.txt')
 
-    def test_check_is_file_empty_when_file_is_not_empty(self):
+    def test_check_is_file_empty_when_file_is_not_empty(self) -> None:
         with open('testfilenotempty.txt', 'w') as not_empty_file:
             not_empty_file.write('just a text')
 
         self.assertFalse(check_is_file_empty('testfilenotempty.txt'))
         os.remove('testfilenotempty.txt')
 
-    def test_check_is_file_empty_when_file_doesnt_exist(self):
+    def test_check_is_file_empty_when_file_doesnt_exist(self) -> None:
         with self.assertRaisesRegex(
                 FileNotFoundError,
                 r"^Path 'file_that_doesnt_exist.txt' doesn't exist$"):

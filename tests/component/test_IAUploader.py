@@ -14,7 +14,7 @@ class IAUploaderTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         copy_testfiles_to_tubeup_rootdir()
 
-    def test_upload_ia(self):
+    def test_upload_ia(self) -> None:
         uploader = IAUploader(get_testfile_path('ia_config_for_test.ini'), True)
 
         videobasename = os.path.join(

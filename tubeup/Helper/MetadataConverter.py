@@ -9,7 +9,7 @@ from tubeup import __version__
 class MetadataConverter(object):
 
     @staticmethod
-    def create_archive_org_metadata_from_youtubedl_meta(vid_meta):
+    def create_archive_org_metadata_from_youtubedl_meta(vid_meta) -> dict:
         """
         Create archive.org metadata from youtubedl-generated metadata.
 
@@ -120,14 +120,13 @@ class MetadataConverter(object):
         return upload_date
 
     @staticmethod
-    def determine_licenseurl(vid_meta):
+    def determine_licenseurl(vid_meta) -> str:
         """
         Determine licenseurl for an url
 
         :param vid_meta:
         :return: licenseurl or empty string if not found
         """
-        licenseurl = ''
         licenses = {
             "Creative Commons Attribution license (reuse allowed)": "https://creativecommons.org/licenses/by/3.0/",
             "Attribution-NonCommercial-ShareAlike": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
@@ -141,7 +140,7 @@ class MetadataConverter(object):
         if 'license' in vid_meta and vid_meta['license']:
             return licenses.get(vid_meta['license'])
 
-        return licenseurl
+        return ''
 
     @staticmethod
     def determine_subject(vid_meta: dict) -> str:

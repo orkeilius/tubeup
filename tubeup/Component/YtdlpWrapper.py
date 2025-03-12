@@ -6,7 +6,7 @@ from typing import Optional, Union
 
 import internetarchive
 from logging import Logger
-from tubeup.config.Ydl_options_factory import Ydl_options_factory
+from tubeup.config.YdlOptionsFactory import YdlOptionsFactory
 
 from tubeup.Helper import DirPath
 from yt_dlp import YoutubeDL
@@ -24,16 +24,16 @@ class YtdlpWrapper:
                  use_download_archive: bool = False,
                  ignore_existing_item: bool = False,
                  verbose: bool = False,
-                 ):
+                 ) -> None:
         self.logger: Logger = getLogger(__name__)
         self.dir_path: DirPath = dir_path
         self.ignore_existing_item: bool = ignore_existing_item
         self.verbose: bool = verbose
 
-        self.ydl_opts = Ydl_options_factory.generate_ydl_options(self.dir_path, self.logger, self.ydl_progress_hook,
-                                                                 cookie_file, proxy_url,
-                                                                 ydl_username, ydl_password,
-                                                                 use_download_archive)
+        self.ydl_opts = YdlOptionsFactory.generate_ydl_options(self.dir_path, self.logger, self.ydl_progress_hook,
+                                                               cookie_file, proxy_url,
+                                                               ydl_username, ydl_password,
+                                                               use_download_archive)
 
         self.ydl = YoutubeDL(self.ydl_opts)
 
@@ -117,10 +117,10 @@ class YtdlpWrapper:
 
         info_type = info_dict.get('_type', 'video')
         if info_type == 'playlist':
-            list = set()
+            list_video = set()
             for entry in info_dict['entries']:
-                list.add(self.create_basename_from_ydl_video(entry))
-            return list
+                list_video.add(self.create_basename_from_ydl_video(entry))
+            return list_video
 
         self.logger.debug('Creating basenames from ydl info dict')
 
@@ -129,7 +129,7 @@ class YtdlpWrapper:
         file_basename = re.sub(r'(\.f\d+)', '', filename_without_ext)
         return file_basename
 
-    def ydl_progress_hook(self, d):
+    def ydl_progress_hook(self, d) -> None:
         if d['status'] == 'downloading' and self.verbose:
             if d.get('_total_bytes_str') is not None:
                 msg_template = ('%(_percent_str)s of %(_total_bytes_str)s '

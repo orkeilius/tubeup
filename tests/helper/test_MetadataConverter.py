@@ -2,6 +2,7 @@ import time
 import json
 import os
 import unittest
+from typing import LiteralString, Union
 
 from tubeup import __version__
 from tubeup.Helper.MetadataConverter import MetadataConverter
@@ -9,20 +10,21 @@ from tubeup.Helper.MetadataConverter import MetadataConverter
 SCANNER = 'TubeUp Video Stream Mirroring Application {}'.format(__version__)
 
 
-def get_testfile_path(name):
+def get_testfile_path(name) -> Union[LiteralString, str, bytes]:
     current_path = os.path.dirname(os.path.realpath(__file__))
     return os.path.join(current_path, '../test_tubeup_files', name)
 
 
 class MetadataConverterTest(unittest.TestCase):
-    def test_determine_collection_type(self):
+
+    def test_determine_collection_type(self) -> None:
         soundcloud_colltype = MetadataConverter.determine_collection_type('https://soundcloud.com/testurl')
         self.assertEqual(soundcloud_colltype, 'opensource_audio')
 
         another_colltype = MetadataConverter.determine_collection_type('https://www.youtube.com/watch?v=testVideo')
         self.assertEqual(another_colltype, 'opensource_movies')
 
-    def test_create_archive_org_metadata_from_youtubedl_meta(self):
+    def test_create_archive_org_metadata_from_youtubedl_meta(self) -> None:
         with open(get_testfile_path(
                 'Mountain_3_-_Video_Background_HD_1080p-6iRV8liah8A.info.json')
         ) as f:
@@ -56,7 +58,7 @@ class MetadataConverterTest(unittest.TestCase):
 
         self.assertEqual(expected_result, result)
 
-    def test_create_archive_org_metadata_from_youtubedl_meta_description_text_null(self):
+    def test_create_archive_org_metadata_from_youtubedl_meta_description_text_null(self) -> None:
         with open(get_testfile_path(
                 'description_text_null.json')
         ) as f:
@@ -70,7 +72,7 @@ class MetadataConverterTest(unittest.TestCase):
 
         self.assertEqual(expected_description, result.get('description'))
 
-    def test_create_archive_org_metadata_from_youtubedl_meta_no_uploader(self):
+    def test_create_archive_org_metadata_from_youtubedl_meta_no_uploader(self) -> None:
         with open(get_testfile_path(
                 'Mountain_3_-_Video_Background_HD_1080p-6iRV8liah8A.info_no_'
                 'uploader.json')
@@ -105,7 +107,7 @@ class MetadataConverterTest(unittest.TestCase):
 
         self.assertEqual(expected_result, result)
 
-    def test_create_archive_org_metadata_from_youtubedl_meta_no_date(self):
+    def test_create_archive_org_metadata_from_youtubedl_meta_no_date(self) -> None:
         with open(get_testfile_path(
                 'Mountain_3_-_Video_Background_HD_1080p-6iRV8liah8A.'
                 'info_no_date.json')
@@ -143,7 +145,7 @@ class MetadataConverterTest(unittest.TestCase):
 
         self.assertEqual(expected_result, result)
 
-    def test_create_archive_org_metadata_from_youtubedl_meta_twitch_clips(self):
+    def test_create_archive_org_metadata_from_youtubedl_meta_twitch_clips(self) -> None:
         with open(get_testfile_path(
                 'EA_Play_2016_Live_from_the_Novo_Theatre-42850523.info.json')
         ) as f:
@@ -168,7 +170,7 @@ class MetadataConverterTest(unittest.TestCase):
 
         self.assertEqual(expected_result, result)
 
-    def test_create_archive_org_metadata_from_youtubedl_meta_mass_of_tags(self):
+    def test_create_archive_org_metadata_from_youtubedl_meta_mass_of_tags(self) -> None :
         with open(get_testfile_path(
                 'Mountain_3_-_Video_Background_HD_1080p-6iRV8liah8A.info.json')
         ) as f:

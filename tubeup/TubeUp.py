@@ -14,7 +14,7 @@ class TubeUp(object):
                  verbose=False,
                  dir_path='~/.tubeup',
                  ia_config_path=None,
-                 output_template='%(id)s.%(ext)s'):
+                 output_template='%(id)s.%(ext)s') -> None:
         """
         `tubeup` is a tool to archive YouTube by downloading the videos and
         uploading it back to the archive.org.
@@ -43,7 +43,7 @@ class TubeUp(object):
                      cookie_file=None, proxy=None,
                      ydl_username=None, ydl_password=None,
                      use_download_archive=False,
-                     ignore_existing_item=False):
+                     ignore_existing_item=False) -> None:
         """
         Download and upload videos from youtube_dl supported sites to
         archive.org

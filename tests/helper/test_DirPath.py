@@ -9,7 +9,7 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 
 class DirPathTest(unittest.TestCase):
 
-    def test_set_dir_path(self):
+    def test_set_dir_path(self) -> None:
         root_path = os.path.join(
             current_path, '.directory_for_tubeup_set_dir_path_test')
         dir_paths_dict = dict(root=root_path,

@@ -20,9 +20,9 @@ class test_YtdlpWrapper(unittest.TestCase):
 
     @classmethod
     @patch("tubeup.Component.YtdlpWrapper.YoutubeDL", FakeYDL)
-    def setUp(self) -> None:
+    def setUp(cls) -> None:
         dir_path = DirPath(os.path.join(current_path, 'test_tubeup_rootdir'))
-        self.ydp: YtdlpWrapper = YtdlpWrapper(dir_path, ignore_existing_item=True)
+        cls.ydp: YtdlpWrapper = YtdlpWrapper(dir_path, ignore_existing_item=True)
 
     def test_get_resource_basenames(self) -> None:
         result = self.ydp.download(self.ydp.get_video_info(['https://www.youtube.com/watch?v=KdsN9YhkDrY'])
