@@ -1,7 +1,7 @@
 import glob
 import os
 import shutil
-from typing import Union, LiteralString
+from typing import Union
 
 from tubeup import __version__
 
@@ -10,7 +10,7 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 SCANNER = 'TubeUp Video Stream Mirroring Application {}'.format(__version__)
 
 
-def get_testfile_path(name) -> Union[LiteralString, str, bytes]:
+def get_testfile_path(name) -> Union[str, bytes]:
     return os.path.join(current_path, 'test_files', name)
 
 
@@ -43,7 +43,7 @@ def copy_testfiles_to_tubeup_rootdir() -> None:
             os.path.join(temp_dir,
                          filepath))
 
-def get_testfile_path(name) -> Union[LiteralString, str, bytes]:
+def get_testfile_path(name) -> Union[str, bytes]:
     current_path = os.path.dirname(os.path.realpath(__file__))
     return os.path.join(current_path, 'test_files', name)
 

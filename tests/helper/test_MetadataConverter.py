@@ -1,8 +1,6 @@
 import time
 import json
-import os
 import unittest
-from typing import LiteralString, Union
 
 from tests._test.testUtils import get_testfile_path
 from tubeup import __version__
