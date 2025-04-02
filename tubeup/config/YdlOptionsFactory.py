@@ -16,7 +16,7 @@ class YdlOptionsFactory:
                              ydl_password: str = None,
                              use_download_archive: bool = False,
                              ydl_output_template: str = '%(id)s.%(ext)s',
-                             verbose: bool = False) -> dict :
+                             verbose: bool = False) -> dict:
         """
         Generate a dictionary that contains options that will be used
         by yt-dlp.
@@ -62,7 +62,7 @@ class YdlOptionsFactory:
                                    # ripping will  continue uninterupted,
                                    # use with verbose off
             'fixup': 'detect_or_warn',  # Slightly more verbosity for debugging
-                              # problems
+                                        # problems
             'nooverwrites': True,  # Don't touch what's already been
                                    # downloaded speeds things
             'consoletitle': True,   # Download percentage in console title

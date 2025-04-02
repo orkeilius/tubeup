@@ -18,7 +18,6 @@ class FakeYDL(YoutubeDL):
     def to_screen(self, s, *args, **kwargs) -> None:
         print(s)
 
-
     def download(self, x) -> None:
         self.result.append(x)
 

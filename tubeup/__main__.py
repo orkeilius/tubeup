@@ -61,7 +61,7 @@ from tubeup.TubeUp import TubeUp
 from tubeup import __version__
 
 
-def main() -> None  :
+def main() -> None:
     # Parse arguments from file docstring
     args = docopt.docopt(__doc__, version=__version__)
 

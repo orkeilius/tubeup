@@ -1,3 +1,4 @@
+# flake8: noqa
 info_dict_video = {'abr': 128,
                    'acodec': 'mp4a.40.2',
                    'age_limit': 0,

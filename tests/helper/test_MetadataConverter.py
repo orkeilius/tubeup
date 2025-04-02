@@ -8,6 +8,7 @@ from tubeup.Helper.MetadataConverter import MetadataConverter
 
 SCANNER = 'TubeUp Video Stream Mirroring Application {}'.format(__version__)
 
+
 class MetadataConverterTest(unittest.TestCase):
 
     def test_determine_collection_type(self) -> None:
@@ -163,7 +164,7 @@ class MetadataConverterTest(unittest.TestCase):
 
         self.assertEqual(expected_result, result)
 
-    def test_create_archive_org_metadata_from_youtubedl_meta_mass_of_tags(self) -> None :
+    def test_create_archive_org_metadata_from_youtubedl_meta_mass_of_tags(self) -> None:
         with open(get_testfile_path(
                 'Mountain_3_-_Video_Background_HD_1080p-6iRV8liah8A.info.json')
         ) as f:
