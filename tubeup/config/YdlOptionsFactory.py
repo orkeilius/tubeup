@@ -61,7 +61,7 @@ class YdlOptionsFactory:
                                    # will be printed to STDOUT and channel
                                    # ripping will  continue uninterupted,
                                    # use with verbose off
-            'fixup': 'warn',  # Slightly more verbosity for debugging
+            'fixup': 'detect_or_warn',  # Slightly more verbosity for debugging
                               # problems
             'nooverwrites': True,  # Don't touch what's already been
                                    # downloaded speeds things

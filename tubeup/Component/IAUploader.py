@@ -17,7 +17,7 @@ class IAUploader:
         self.verbose: bool = verbose
         self.ia_config_path: str = ia_config_path
 
-    def upload_ia(self, videobasename, custom_meta=None):
+    def upload_ia(self, videobasename, custom_meta=None) -> tuple[str, dict]:
         """
         Upload video to archive.org.
 
