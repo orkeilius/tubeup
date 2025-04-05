@@ -1,9 +1,5 @@
-import os
 import sys
 import re
-import glob
-import time
-import json
 import logging
 import internetarchive
 
@@ -14,6 +10,8 @@ from tubeup.Helper.MetadataConverter import MetadataConverter
 
 from .utils import (get_itemname, check_is_file_empty,
                     EMPTY_ANNOTATION_FILE)
+from .Helper.IAUploader import IAUploader
+from .utils import (get_itemname,)
 from logging import getLogger
 
 from tubeup.config.Ydl_options_factory import *
@@ -283,76 +281,6 @@ class TubeUp(object):
 
         return ydl_opts
 
-    def upload_ia(self, videobasename, custom_meta=None):
-        """
-        Upload video to archive.org.
-
-        :param videobasename:  A video base name.
-        :param custom_meta:    A custom meta, will be used by internetarchive
-                               library when uploading to archive.org.
-        :return:               A tuple containing item name and metadata used
-                               when uploading to archive.org and whether the item
-                               already exists.
-        """
-        json_metadata_filepath = videobasename + '.info.json'
-        with open(json_metadata_filepath, 'r', encoding='utf-8') as f:
-            vid_meta = json.load(f)
-
-        # Exit if video download did not complete, don't upload .part files to IA
-        for ext in ['*.part', '*.f303.*', '*.f302.*', '*.ytdl', '*.f251.*', '*.248.*', '*.f247.*', '*.temp']:
-            if glob.glob(videobasename + ext):
-                msg = 'Video download incomplete, please re-run or delete video stubs in downloads folder, exiting...'
-                raise Exception(msg)
-
-        itemname = get_itemname(vid_meta)
-        metadata = MetadataConverter.create_archive_org_metadata_from_youtubedl_meta(vid_meta)
-
-        # Delete empty description file
-        description_file_path = videobasename + '.description'
-        if (os.path.exists(description_file_path) and
-            (('description' in vid_meta and
-             vid_meta['description'] == '') or
-                check_is_file_empty(description_file_path))):
-            os.remove(description_file_path)
-
-        # Delete empty annotations.xml file so it isn't uploaded
-        annotations_file_path = videobasename + '.annotations.xml'
-        if (os.path.exists(annotations_file_path) and
-            (('annotations' in vid_meta and
-             vid_meta['annotations'] in {'', EMPTY_ANNOTATION_FILE}) or
-                check_is_file_empty(annotations_file_path))):
-            os.remove(annotations_file_path)
-
-        # Upload all files with videobase name: e.g. video.mp4,
-        # video.info.json, video.srt, etc.
-        files_to_upload = glob.glob(videobasename + '*')
-
-        # Upload the item to the Internet Archive
-        item = internetarchive.get_item(itemname)
-
-        if custom_meta:
-            metadata.update(custom_meta)
-
-        # Parse internetarchive configuration file.
-        parsed_ia_s3_config = parse_config_file(self.ia_config_path)[2]['s3']
-        s3_access_key = parsed_ia_s3_config['access']
-        s3_secret_key = parsed_ia_s3_config['secret']
-
-        if None in {s3_access_key, s3_secret_key}:
-            msg = ('`internetarchive` configuration file is not configured'
-                   ' properly.')
-
-            self.logger.error(msg)
-            if self.verbose:
-                print(msg)
-            raise Exception(msg)
-
-        item.upload(files_to_upload, metadata=metadata, retries=9001,
-                    request_kwargs=dict(timeout=(9001, 9001)), delete=True,
-                    verbose=self.verbose, access_key=s3_access_key,
-                    secret_key=s3_secret_key)
-
-        return itemname, metadata
 
     def archive_urls(self, urls, custom_meta=None,
                      cookie_file=None, proxy=None,
@@ -384,6 +312,8 @@ class TubeUp(object):
         downloaded_file_basenames = self.get_resource_basenames(
             urls, cookie_file, proxy, ydl_username, ydl_password, use_download_archive,
             ignore_existing_item)
+        uploader = IAUploader(self.ia_config_path,self.verbose)
         for basename in downloaded_file_basenames:
-            identifier, meta = self.upload_ia(basename, custom_meta)
+
+            identifier, meta = uploader.upload_ia(basename, custom_meta)
             yield identifier, meta
