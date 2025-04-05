@@ -5,7 +5,7 @@ import requests_mock
 
 from tests._testUtils import mock_upload_response_by_videobasename, copy_testfiles_to_tubeup_rootdir, SCANNER, \
     current_path, get_testfile_path
-from tubeup.Helper.IAUploader import IAUploader
+from tubeup.Component.IAUploader import IAUploader
 
 class IAUploaderTests(unittest.TestCase):
 
