@@ -1,17 +1,13 @@
-import unittest
-import os
-import requests_mock
-import logging
 import json
-
-from tubeup.TubeUp import TubeUp
-from tubeup import __version__
-from yt_dlp import YoutubeDL
-from .constants import info_dict_playlist, info_dict_video
+import logging
+import unittest
 from unittest.mock import patch
 
+import requests_mock
+from yt_dlp import YoutubeDL
+
 from tests._testUtils import *
-from tests.constants import info_dict_playlist, info_dict_video
+from tubeup.TubeUp import TubeUp
 
 
 # Hijacked yt-dlp class so we don't make any real download requests.
@@ -35,7 +31,7 @@ class MockYTDLP(YoutubeDL):
             return json.load(f)
 
 
-@patch("tubeup.TubeUp.YoutubeDL", MockYTDLP)
+@patch("tubeup.Component.YtdlpWrapper.YoutubeDL", MockYTDLP)
 class TubeUpTests(unittest.TestCase):
 
     def setUp(self):
@@ -53,6 +49,7 @@ class TubeUpTests(unittest.TestCase):
     def test_tubeup_attribute_logger_when_verbose_mode(self):
         tu = TubeUp(verbose=True)
         self.assertIsInstance(tu.logger, logging.Logger)
+
 
     def test_archive_urls(self):
         tu = TubeUp(dir_path=os.path.join(current_path,

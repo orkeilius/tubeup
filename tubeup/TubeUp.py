@@ -1,19 +1,12 @@
-import sys
-import re
 import logging
-import internetarchive
 
-from internetarchive.config import parse_config_file
 from yt_dlp import YoutubeDL
 
-from tubeup.Helper.MetadataConverter import MetadataConverter
-
-from .utils import (get_itemname, check_is_file_empty,
-                    EMPTY_ANNOTATION_FILE)
 from .Helper.IAUploader import IAUploader
 from .utils import (get_itemname,)
 from logging import getLogger
 
+from tubeup.Component.YtdlpWrapper import YtdlpWrapper
 from tubeup.config.Ydl_options_factory import *
 
 
@@ -50,8 +43,6 @@ class TubeUp(object):
         # Just print errors in quiet mode
         if not self.verbose:
             self.logger.setLevel(logging.ERROR)
-
-
 
 
     def get_resource_basenames(self, urls,
@@ -199,87 +190,6 @@ class TubeUp(object):
 
         return basenames
 
-    def generate_ydl_options(self,
-                             ydl_progress_hook,
-                             cookie_file=None,
-                             proxy_url=None,
-                             ydl_username=None,
-                             ydl_password=None,
-                             use_download_archive=False,
-                             ydl_output_template=None):
-        """
-        Generate a dictionary that contains options that will be used
-        by yt-dlp.
-
-        :param ydl_progress_hook:     A function that will be called during the
-                                      download process by youtube_dl.
-        :param proxy_url:             A proxy url for YoutubeDL.
-        :param ydl_username:          Username that will be used to download the
-                                      resources with youtube_dl.
-        :param ydl_password:          Password of the related username, will be
-                                      used to download the resources with
-                                      youtube_dl.
-        :param use_download_archive:  Record the video url to the download archive.
-                                      This will download only videos not listed in
-                                      the archive file. Record the IDs of all
-                                      downloaded videos in it.
-        :return:                      A dictionary that contains options that will
-                                      be used by youtube_dl.
-        """
-        ydl_opts = {
-            'outtmpl': os.path.join(self.dir_path.downloads,
-                                    self.output_template),
-            'restrictfilenames': True,
-            'quiet': not self.verbose,
-            'verbose': self.verbose,
-            'progress_with_newline': True,
-            'forcetitle': True,
-            'continuedl': True,
-            'retries': 9001,
-            'fragment_retries': 9001,
-            'forcejson': False,
-            'writeinfojson': True,
-            'writedescription': True,
-            'writethumbnail': True,
-            'writeannotations': True,
-            'writesubtitles': True,
-            'allsubtitles': True,
-            'ignoreerrors': True,  # Geo-blocked,
-                                   # copyrighted/private/deleted
-                                   # will be printed to STDOUT and channel
-                                   # ripping will  continue uninterupted,
-                                   # use with verbose off
-            'fixup': 'warn',  # Slightly more verbosity for debugging
-                              # problems
-            'nooverwrites': True,  # Don't touch what's already been
-                                   # downloaded speeds things
-            'consoletitle': True,   # Download percentage in console title
-            'prefer_ffmpeg': True,  # `ffmpeg` is better than `avconv`,
-                                    # let's prefer it's use
-            # Warns on out of date youtube-dl script, helps debugging for
-            # youtube-dl devs
-            'call_home': False,
-            'logger': self.logger,
-            'progress_hooks': [ydl_progress_hook]
-        }
-
-        if cookie_file is not None:
-            ydl_opts['cookiefile'] = cookie_file
-
-        if proxy_url is not None:
-            ydl_opts['proxy'] = proxy_url
-
-        if ydl_username is not None:
-            ydl_opts['username'] = ydl_username
-
-        if ydl_password is not None:
-            ydl_opts['password'] = ydl_password
-
-        if use_download_archive:
-            ydl_opts['download_archive'] = os.path.join(self.dir_path.root,
-                                                        '.ytdlarchive')
-
-        return ydl_opts
 
 
     def archive_urls(self, urls, custom_meta=None,
@@ -309,9 +219,8 @@ class TubeUp(object):
         :return:                      Tuple containing identifier and metadata of the
                                       file that has been uploaded to archive.org.
         """
-        downloaded_file_basenames = self.get_resource_basenames(
-            urls, cookie_file, proxy, ydl_username, ydl_password, use_download_archive,
-            ignore_existing_item)
+        ydp = YtdlpWrapper(self.dir_path, cookie_file, proxy, ydl_username, ydl_password, use_download_archive, ignore_existing_item, self.verbose)
+        downloaded_file_basenames = ydp.download(ydp.get_video_info(urls))
         uploader = IAUploader(self.ia_config_path,self.verbose)
         for basename in downloaded_file_basenames:
 
