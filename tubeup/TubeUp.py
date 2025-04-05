@@ -1,6 +1,12 @@
 import logging
+import os
+import re
+import sys
 
-from tubeup.Component.IAUploader import IAUploader
+import internetarchive
+
+from tubeup.Helper.DirPath import DirPath
+
 from yt_dlp import YoutubeDL
 
 from .Component.IAUploader import IAUploader
@@ -8,7 +14,7 @@ from .utils import (get_itemname,)
 from logging import getLogger
 
 from tubeup.Component.YtdlpWrapper import YtdlpWrapper
-from tubeup.config.Ydl_options_factory import *
+from tubeup.config.Ydl_options_factory import Ydl_options_factory
 
 
 DOWNLOAD_DIR_NAME = 'downloads'
@@ -35,16 +41,15 @@ class TubeUp(object):
         :param output_template: A template string that will be used to
                                 generate the output filenames.
         """
-        self.dir_path :DirPath = DirPath(dir_path)
+        self.dir_path: DirPath = DirPath(dir_path)
         self.verbose = verbose
         self.ia_config_path = ia_config_path
-        self.logger = getLogger(__name__)
+        self.logger: logging.Logger = getLogger(__name__)
         self.output_template = output_template
 
         # Just print errors in quiet mode
         if not self.verbose:
             self.logger.setLevel(logging.ERROR)
-
 
     def get_resource_basenames(self, urls,
                                cookie_file=None, proxy_url=None,
@@ -192,7 +197,6 @@ class TubeUp(object):
         return basenames
 
 
-
     def archive_urls(self, urls, custom_meta=None,
                      cookie_file=None, proxy=None,
                      ydl_username=None, ydl_password=None,
@@ -220,10 +224,10 @@ class TubeUp(object):
         :return:                      Tuple containing identifier and metadata of the
                                       file that has been uploaded to archive.org.
         """
-        ydp = YtdlpWrapper(self.dir_path, cookie_file, proxy, ydl_username, ydl_password, use_download_archive, ignore_existing_item, self.verbose)
+        ydp = YtdlpWrapper(self.dir_path, cookie_file, proxy, ydl_username, ydl_password, use_download_archive,
+                           ignore_existing_item, self.verbose)
         downloaded_file_basenames = ydp.download(ydp.get_video_info(urls))
-        uploader = IAUploader(self.ia_config_path,self.verbose)
+        uploader = IAUploader(self.ia_config_path, self.verbose)
         for basename in downloaded_file_basenames:
-
             identifier, meta = uploader.upload_ia(basename, custom_meta)
             yield identifier, meta

@@ -7,21 +7,19 @@ from tests._testUtils import mock_upload_response_by_videobasename, copy_testfil
     current_path, get_testfile_path
 from tubeup.Component.IAUploader import IAUploader
 
+
 class IAUploaderTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
         copy_testfiles_to_tubeup_rootdir()
 
-
     def test_upload_ia(self):
-        uploader = IAUploader(get_testfile_path('ia_config_for_test.ini'),True)
+        uploader = IAUploader(get_testfile_path('ia_config_for_test.ini'), True)
 
         videobasename = os.path.join(
             current_path, 'test_tubeup_rootdir', 'downloads',
             'Mountain_3_-_Video_Background_HD_1080p-6iRV8liah8A')
-
-
 
         with requests_mock.Mocker() as m:
             # Mock the request to s3.us.archive.org, so it will responds

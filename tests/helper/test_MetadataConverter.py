@@ -8,9 +8,11 @@ from tubeup.Helper.MetadataConverter import MetadataConverter
 
 SCANNER = 'TubeUp Video Stream Mirroring Application {}'.format(__version__)
 
+
 def get_testfile_path(name):
     current_path = os.path.dirname(os.path.realpath(__file__))
     return os.path.join(current_path, '../test_tubeup_files', name)
+
 
 class MetadataConverterTest(unittest.TestCase):
     def test_determine_collection_type(self):
@@ -19,8 +21,6 @@ class MetadataConverterTest(unittest.TestCase):
 
         another_colltype = MetadataConverter.determine_collection_type('https://www.youtube.com/watch?v=testVideo')
         self.assertEqual(another_colltype, 'opensource_movies')
-
-
 
     def test_create_archive_org_metadata_from_youtubedl_meta(self):
         with open(get_testfile_path(

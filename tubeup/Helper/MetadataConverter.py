@@ -17,7 +17,7 @@ class MetadataConverter(object):
         :return:         A dict containing metadata to be used by
                          internetarchive library.
         """
-        
+
         videourl = vid_meta['webpage_url']
         creator = MetadataConverter.determine_creator(vid_meta)
         collection = MetadataConverter.determine_collection_type(videourl)
@@ -52,10 +52,9 @@ class MetadataConverter(object):
             metadata["channel"] = vid_meta["channel_url"]
 
         return metadata
-    
 
     @staticmethod
-    def determine_creator(vid_meta : dict) -> str:
+    def determine_creator(vid_meta: dict) -> str:
         """
         Determine creator for an url
 
@@ -73,12 +72,11 @@ class MetadataConverter(object):
                 return vid_meta['uploader_url']
         except TypeError:  # apparently uploader is null as well
             pass
-        
+
         return 'tubeup.py'
 
-
     @staticmethod
-    def determine_collection_type(url : str) -> str:
+    def determine_collection_type(url: str) -> str:
         """
         Determine collection type for an url.
 
@@ -88,10 +86,9 @@ class MetadataConverter(object):
         if urlparse(url).netloc == 'soundcloud.com':
             return 'opensource_audio'
         return 'opensource_movies'
-    
 
     @staticmethod
-    def determine_description(vid_meta : dict) -> str:
+    def determine_description(vid_meta: dict) -> str:
         """
         Determine description for an url
 
@@ -105,9 +102,9 @@ class MetadataConverter(object):
         # archive.org does not display raw newlines
         description = re.sub('\r?\n', '<br>', description_text)
         return description
-    
+
     @staticmethod
-    def determine_upload_date(vid_meta : dict) -> str:
+    def determine_upload_date(vid_meta: dict) -> str:
         """
         Determine upload date for an url
 
@@ -145,9 +142,9 @@ class MetadataConverter(object):
             return licenses.get(vid_meta['license'])
 
         return licenseurl
-    
+
     @staticmethod
-    def determine_subject(vid_meta : dict) -> str:
+    def determine_subject(vid_meta: dict) -> str:
         """
         Determine subject for an url
 
@@ -182,5 +179,5 @@ class MetadataConverter(object):
             tags_list = tags_string.split(';')
             tags_list.pop()
             tags_string = ';'.join(tags_list)
-        
+
         return tags_string

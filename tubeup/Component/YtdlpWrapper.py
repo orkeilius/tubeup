@@ -1,41 +1,44 @@
+import os
 import re
 import sys
 from logging import getLogger
-from typing import Optional
+from typing import Union, Optional
 
 import internetarchive
+from logging import Logger
+from tubeup.config.Ydl_options_factory import Ydl_options_factory
+
+from tubeup.Helper import DirPath
 from yt_dlp import YoutubeDL
 
-from tubeup.config.Ydl_options_factory import *
 from tubeup.utils import get_itemname
 
 
 class YtdlpWrapper:
 
-    def __init__(self,dir_path:DirPath,
-                      cookie_file: str = None,
-                      proxy_url: str = None,
-                      ydl_username: str = None,
-                      ydl_password: str = None,
-                      use_download_archive: bool = False,
-                      ignore_existing_item: bool = False,
-                      verbose: bool = False,
-                      ):
+    def __init__(self, dir_path: DirPath,
+                 cookie_file: str = None,
+                 proxy_url: str = None,
+                 ydl_username: str = None,
+                 ydl_password: str = None,
+                 use_download_archive: bool = False,
+                 ignore_existing_item: bool = False,
+                 verbose: bool = False,
+                 ):
         self.logger: Logger = getLogger(__name__)
         self.dir_path: DirPath = dir_path
         self.ignore_existing_item: bool = ignore_existing_item
         self.verbose: bool = verbose
 
         self.ydl_opts = Ydl_options_factory.generate_ydl_options(self.dir_path, self.logger, self.ydl_progress_hook,
-                                                           cookie_file, proxy_url,
-                                                           ydl_username, ydl_password,
-                                                           use_download_archive)
+                                                                 cookie_file, proxy_url,
+                                                                 ydl_username, ydl_password,
+                                                                 use_download_archive)
 
         self.ydl = YoutubeDL(self.ydl_opts)
 
-
-    def download(self,video_infos : list[any],
-    ) -> set[str]:
+    def download(self, video_infos: list[any],
+                 ) -> set[str]:
         """
         Download file from an urls.
 
@@ -55,25 +58,24 @@ class YtdlpWrapper:
         :return:                      Set of videos basename that has been downloaded.
         """
 
-        basenames : set[str]= set()
+        basenames: set[str] = set()
         for video_info in video_infos:
 
-            basename : Optional[str] = self.ydl_progress_each(video_info)
+            basename: Optional[str] = self.ydl_progress_each(video_info)
 
             if basename is not None:
                 basenames.add(basename)
 
-
         self.logger.debug(
-           'Basenames obtained from url : %s'
-           %  basenames)
+            'Basenames obtained from url : %s'
+            % basenames)
 
         return basenames
 
-    def get_video_info(self,urls: list[str]) -> list[any]:
+    def get_video_info(self, urls: list[str]) -> list[any]:
         video_infos: list[str] = []
         for url in urls:
-            #with YoutubeDL(self.) as ydl:
+            # with YoutubeDL(self.) as ydl:
             info_dict = self.ydl.extract_info(url)
             if info_dict.get('_type', 'video') == 'playlist':
                 video_infos.extend(info_dict['entries'])
@@ -81,20 +83,20 @@ class YtdlpWrapper:
                 video_infos.append(info_dict)
         return video_infos
 
-    def ydl_progress_each(self,entry) -> Optional[str]:
+    def ydl_progress_each(self, entry) -> Optional[str]:
         if not entry:
             self.logger.warning('Video "%s" is not available. Skipping.' % entry['url'])
             return None
         if self.ydl.in_download_archive(entry):
             return None
         if not self.check_if_ia_item_exists(entry):
-           self.ydl.extract_info(entry['webpage_url'])
-           return self.create_basename_from_ydl_video(entry)
+            self.ydl.extract_info(entry['webpage_url'])
+            return self.create_basename_from_ydl_video(entry)
         else:
             self.ydl.record_download_archive(entry)
             return None
 
-    def check_if_ia_item_exists(self,info_dict) -> bool:
+    def check_if_ia_item_exists(self, info_dict) -> bool:
         itemname = get_itemname(info_dict)
         item = internetarchive.get_item(itemname)
         if item.exists and self.verbose:
@@ -104,8 +106,7 @@ class YtdlpWrapper:
             return True
         return False
 
-
-    def create_basename_from_ydl_video(self, info_dict) -> str | set[str]:
+    def create_basename_from_ydl_video(self, info_dict) -> Union[str, set[str]]:
         """
         Create basenames from YoutubeDL vidéo info_dict.
         :param info_dict:  A ydl info_dict that will be used to create
@@ -128,7 +129,7 @@ class YtdlpWrapper:
         file_basename = re.sub(r'(\.f\d+)', '', filename_without_ext)
         return file_basename
 
-    def ydl_progress_hook(self,d):
+    def ydl_progress_hook(self, d):
         if d['status'] == 'downloading' and self.verbose:
             if d.get('_total_bytes_str') is not None:
                 msg_template = ('%(_percent_str)s of %(_total_bytes_str)s '

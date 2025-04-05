@@ -1,17 +1,15 @@
+import os
 import unittest
 import os
 import requests_mock
 import logging
-import json
+
 
 from tubeup.TubeUp import TubeUp
-from tubeup import __version__
 from yt_dlp import YoutubeDL
-from .constants import info_dict_playlist, info_dict_video
 from unittest.mock import patch
 
 from tests._testUtils import *
-from tests.constants import info_dict_playlist, info_dict_video
 
 
 # Hijacked yt-dlp class so we don't make any real download requests.
@@ -42,7 +40,6 @@ class TubeUpTests(unittest.TestCase):
         self.tu = TubeUp()
         self.maxDiff = 999999999
         copy_testfiles_to_tubeup_rootdir()
-
 
     def test_tubeup_attribute_logger_when_quiet_mode(self):
         # self.tu is already `TubeUp` instance with quiet mode, so we don't
