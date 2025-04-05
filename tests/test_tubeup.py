@@ -7,7 +7,7 @@ import requests_mock
 import glob
 import logging
 
-from tubeup.TubeUp import TubeUp, DOWNLOAD_DIR_NAME
+from tubeup.TubeUp import TubeUp
 from tubeup import __version__
 from yt_dlp import YoutubeDL
 from .constants import info_dict_playlist, info_dict_video
@@ -79,21 +79,6 @@ class TubeUpTests(unittest.TestCase):
         self.tu = TubeUp()
         self.maxDiff = 999999999
 
-    def test_set_dir_path(self):
-        root_path = os.path.join(
-            current_path, '.directory_for_tubeup_set_dir_path_test')
-        dir_paths_dict = dict(root=root_path,
-                              downloads=os.path.join(root_path,
-                                                     DOWNLOAD_DIR_NAME))
-
-        self.tu.dir_path = root_path
-        self.assertEqual(self.tu.dir_path, dir_paths_dict)
-
-        # Make sure that other directories are created as well
-        self.assertTrue(os.path.exists(dir_paths_dict['downloads']))
-
-        # Clean the test directory
-        shutil.rmtree(root_path, ignore_errors=True)
 
     def test_tubeup_attribute_logger_when_quiet_mode(self):
         # self.tu is already `TubeUp` instance with quiet mode, so we don't
@@ -140,11 +125,11 @@ class TubeUpTests(unittest.TestCase):
 
         expected_result = {
             'outtmpl': os.path.join(
-                self.tu.dir_path['downloads'], '%(id)s.%(ext)s'),
+                self.tu.dir_path.downloads, '%(id)s.%(ext)s'),
             'restrictfilenames': True,
             'verbose': False,
             'quiet': True,
-            'download_archive': os.path.join(self.tu.dir_path['root'],
+            'download_archive': os.path.join(self.tu.dir_path.root,
                                              '.ytdlarchive'),
             'progress_with_newline': True,
             'forcetitle': True,
@@ -174,7 +159,7 @@ class TubeUpTests(unittest.TestCase):
 
         expected_result = {
             'outtmpl': os.path.join(
-                self.tu.dir_path['downloads'], '%(id)s.%(ext)s'),
+                self.tu.dir_path.downloads, '%(id)s.%(ext)s'),
             'restrictfilenames': True,
             'verbose': False,
             'quiet': True,
@@ -207,7 +192,7 @@ class TubeUpTests(unittest.TestCase):
 
         expected_result = {
             'outtmpl': os.path.join(
-                self.tu.dir_path['downloads'], '%(id)s.%(ext)s'),
+                self.tu.dir_path.downloads, '%(id)s.%(ext)s'),
             'restrictfilenames': True,
             'verbose': False,
             'quiet': True,
@@ -242,7 +227,7 @@ class TubeUpTests(unittest.TestCase):
 
         expected_result = {
             'outtmpl': os.path.join(
-                self.tu.dir_path['downloads'], '%(id)s.%(ext)s'),
+                self.tu.dir_path.downloads, '%(id)s.%(ext)s'),
             'restrictfilenames': True,
             'verbose': False,
             'quiet': True,
@@ -279,7 +264,7 @@ class TubeUpTests(unittest.TestCase):
 
         expected_result = {
             'outtmpl': os.path.join(
-                self.tu.dir_path['downloads'], '%(id)s.%(ext)s'),
+                self.tu.dir_path.downloads, '%(id)s.%(ext)s'),
             'restrictfilenames': True,
             'verbose': True,
             'quiet': False,
