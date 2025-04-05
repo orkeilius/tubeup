@@ -8,15 +8,15 @@ import logging
 import internetarchive
 
 from internetarchive.config import parse_config_file
-from datetime import datetime
 from yt_dlp import YoutubeDL
 
 from tubeup.Helper.MetadataConverter import MetadataConverter
 
-from tubeup.Helper.DirPath import DirPath
 from .utils import (get_itemname, check_is_file_empty,
                     EMPTY_ANNOTATION_FILE)
 from logging import getLogger
+
+from tubeup.config.Ydl_options_factory import *
 
 
 DOWNLOAD_DIR_NAME = 'downloads'
@@ -146,7 +146,7 @@ class TubeUp(object):
                 if self.verbose:
                     print(msg)
 
-        ydl_opts = self.generate_ydl_options(ydl_progress_hook,
+        ydl_opts = Ydl_options_factory.generate_ydl_options(self.dir_path,self.logger,ydl_progress_hook,
                                              cookie_file, proxy_url,
                                              ydl_username, ydl_password,
                                              use_download_archive)
@@ -254,8 +254,8 @@ class TubeUp(object):
                                    # will be printed to STDOUT and channel
                                    # ripping will  continue uninterupted,
                                    # use with verbose off
-            'fixup': 'detect_or_warn',  # Slightly more verbosity for debugging
-                                        # problems
+            'fixup': 'warn',  # Slightly more verbosity for debugging
+                              # problems
             'nooverwrites': True,  # Don't touch what's already been
                                    # downloaded speeds things
             'consoletitle': True,   # Download percentage in console title
